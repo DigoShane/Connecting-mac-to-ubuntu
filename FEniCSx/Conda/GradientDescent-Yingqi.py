@@ -66,7 +66,8 @@ print("a8")
 
 
 print("yoyo")
-print("1/yoyo")
+
+print("yoyo^2")
 
 try:
     import pyvista
