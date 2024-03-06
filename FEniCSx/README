@@ -1,0 +1,3 @@
+I have FEniCSx installed.
+There is a conda environment for FEniCSx, the corresponding codes are in the Conda folder.
+Alternatively, I rember using docker to run FEniCSx as well. I think this was based on the Dolfinx tutorial by Dokken.

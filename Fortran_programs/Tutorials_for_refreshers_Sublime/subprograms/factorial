@@ -1,0 +1,5 @@
+program factorial
+integer n
+n=20
+print *, 'the value of',n,'! is', fact(n)
+end factorial

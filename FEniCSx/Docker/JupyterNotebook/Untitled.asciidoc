@@ -1,0 +1,107 @@
++*In[1]:*+
+[source, ipython3]
+----
+import dolfinx
+from dolfinx import fem, mesh, plot, default_scalar_type
+
+import dolfinx.fem.petsc
+from dolfinx.fem.petsc import LinearProblem
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pyvista
+import ufl
+from mpi4py import MPI
+from petsc4py import PETSc
+
+from ufl import (Circumradius, FacetNormal, SpatialCoordinate, TrialFunction, TestFunction,
+                 div, dx, ds, grad, inner)
+----
+
+
++*In[2]:*+
+[source, ipython3]
+----
+#Discretizing [0,L] into N slots.
+L = 100
+N = 1000
+mesh = mesh.create_interval(MPI.COMM_WORLD, N, [0, L])
+----
+
+
++*In[3]:*+
+[source, ipython3]
+----
+v_cg2 = ufl.VectorElement("Lagrange", mesh.ufl_cell(), 2)
+V = fem.FunctionSpace(mesh, v_cg2)
+
+v = ufl.TestFunction(V)
+x = SpatialCoordinate(mesh)
+----
+
+
++*In[4]:*+
+[source, ipython3]
+----
+uh = fem.Function(V)
+u0 = (1 + x[0], 1)
+uh.interpolate(fem.Expression(u0, V.element.interpolation_points()))
+----
+
+
++*Out[4]:*+
+----
+Could not extract MPI communicator for Expression. Maybe you need to pass a communicator?
+
+
+    ---------------------------------------------------------------------------
+
+    AttributeError                            Traceback (most recent call last)
+
+    Cell In[4], line 3
+          1 uh = fem.Function(V)
+          2 u0 = (1 + x[0], 1)
+    ----> 3 uh.interpolate(fem.Expression(u0, V.element.interpolation_points()))
+
+
+    File /usr/local/dolfinx-real/lib/python3.10/dist-packages/dolfinx/fem/function.py:122, in Expression.__init__(self, e, X, comm, form_compiler_options, jit_options, dtype)
+        120 if comm is None:
+        121     try:
+    --> 122         mesh = ufl.domain.extract_unique_domain(e).ufl_cargo()
+        123         comm = mesh.comm
+        124     except AttributeError:
+
+
+    File /usr/local/lib/python3.10/dist-packages/ufl/domain.py:372, in extract_unique_domain(expr)
+        370 def extract_unique_domain(expr):
+        371     """Return the single unique domain expression is defined on or throw an error."""
+    --> 372     domains = extract_domains(expr)
+        373     if len(domains) == 1:
+        374         return domains[0]
+
+
+    File /usr/local/lib/python3.10/dist-packages/ufl/domain.py:365, in extract_domains(expr)
+        363 """Return all domains expression is defined on."""
+        364 domainlist = []
+    --> 365 for t in traverse_unique_terminals(expr):
+        366     domainlist.extend(t.ufl_domains())
+        367 return sorted(join_domains(domainlist))
+
+
+    File /usr/local/lib/python3.10/dist-packages/ufl/corealg/traversal.py:137, in traverse_unique_terminals(expr, visited)
+        135 """Traverse unique terminals."""
+        136 for op in unique_pre_traversal(expr, visited=visited):
+    --> 137     if op._ufl_is_terminal_:
+        138         yield op
+
+
+    AttributeError: 'tuple' object has no attribute '_ufl_is_terminal_'
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----

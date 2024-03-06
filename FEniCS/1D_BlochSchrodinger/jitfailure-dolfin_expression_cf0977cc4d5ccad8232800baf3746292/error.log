@@ -1,0 +1,4 @@
+/tmp/tmpo18schrx/dolfin_expression_cf0977cc4d5ccad8232800baf3746292.cpp: In member function ‘virtual void dolfin::dolfin_expression_cf0977cc4d5ccad8232800baf3746292::eval(Eigen::Ref<Eigen::Matrix<double, -1, 1> >, Eigen::Ref<const Eigen::Matrix<double, -1, 1> >) const’:
+/tmp/tmpo18schrx/dolfin_expression_cf0977cc4d5ccad8232800baf3746292.cpp:63:42: error: ‘l’ was not declared in this scope
+           values[0] = 3+al*sin(2*pi*x[0]/l);
+                                          ^

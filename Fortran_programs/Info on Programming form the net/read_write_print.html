@@ -1,0 +1,1089 @@
+<html class="gr__mathcs_emory_edu"><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252"><meta http-equiv="expires" content="0">
+
+</head><body data-gr-c-s-loaded="true" vlink="#f00000" text="#000000" link="#00ff00" bgcolor="#ffffff">
+
+<hr>
+<font size="+2"><b>
+Reading and Writing text (formatted) files with F90</b></font>
+<hr>
+
+<ul>
+
+<p>
+
+</p><li> <font color="darkmagenta"><b>
+	Output Statements
+	</b></font>
+<p>
+ </p><ul>
+ <li> <b>F90</b> supports 
+	<font color="blue"><b> 2 output statements </b></font>:
+	
+ <p>
+ </p><ul>
+ <table border="5" bgcolor="yellow">
+ <tbody><tr><td>
+ <b><pre>
+  <font color="blue">PRINT</font> <font color="red">formatString</font> , Variables   
+</pre>  </b>
+ </td></tr>
+ <tr><td bgcolor="lightgreen">
+ <b><pre>
+  <font color="blue">WRITE</font> <font color="red">(dev# , formatString)</font> Variables   
+</pre>  </b>
+ </td></tr>
+
+ </tbody></table>
+  </ul>
+ <p>
+ </p></li><li> <b><i>Notice</i></b> the 
+	<font color="blue"><b> different <i>placements</i></b></font>
+	of the
+	<font color="red"><b> comma </b></font>
+	in the <b>statements</b>
+ <p>
+ </p><hr>
+ <p>
+ </p></li><li> <font color="red"><b> NOTE: </b></font>
+<p>
+</p><ul>
+<table border="5" bgcolor="yellow">
+<tbody><tr> <td>
+ <ul>
+ <li> <font color="blue"><b><tt> PRINT </tt></b></font>
+	can 
+	<b><i>only</i></b> be used to output to the
+	<font color="red"><b> terminal </b></font>
+ <p>
+ </p></li><li> <font color="blue"><b><tt> WRITE </tt></b></font>
+	can 
+	be used to output to the
+	<font color="red"><b> terminal </b></font>
+	and to a
+	<font color="red"><b> file</b></font>
+
+ </li></ul>
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+</p><hr>
+<p>
+
+ </p></li><li> The 
+	<font color="blue"><b><tt> WRITE </tt></b></font>
+	statement uses a 
+	<font color="red"><b> device number </b></font>
+	to <b>specify</b> the 
+	<font color="red"><b> output device </b></font>
+ <p>
+</p><p>
+</p><ul>
+<table border="5" bgcolor="lightcyan">
+<tbody><tr> <td>
+ <ul>
+ <li> The <b>standard output (terminal)</b> has 
+	<font color="blue"><b> <i>device number</i> 6 </b></font>
+ </li></ul>
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+
+ </p></li></ul>
+ <p>
+</p><hr>
+<hr>
+<p>
+</p></li><li> <font color="darkmagenta"><b>
+     The "*" format string
+        </b></font>
+<p>
+ </p><ul>
+ <li> I have been using the
+	<font color="blue"><b> default format string </b></font>
+	<font color="red"><b> * </b></font>
+	so far
+   <p>
+	(Mainly because I want to focus on other issues)
+ </p><p>
+ </p><hr>
+ <p>
+ </p></li><li> The
+	<b>format string</b>
+	<font color="red"><b> * </b></font>
+	will cause
+	<b>Fortran</b> will use "default" printing 
+	(each type of variable will have its own default format)
+ <p>
+ <b>Example:</b>
+ </p><p>
+ </p><ul>
+ <table border="5" bgcolor="yellow">
+ <tbody><tr><td>
+ <b><pre>
+  <font color="red">PRINT</font> <font color="blue">*</font>, Variables   
+</pre>  </b>
+ </td></tr>
+ <tr><td bgcolor="lightgreen">
+ <b><pre>
+  <font color="red">WRITE</font> <font color="blue">(6, *)</font> Variables   
+</pre>  </b>
+ </td></tr>
+ </tbody></table>
+  </ul>
+ <p>
+ </p></li></ul>
+ <p>
+</p><hr>
+<hr>
+<p>
+</p></li><li> <font color="darkmagenta"><b>
+        Taylor-made Format Strings
+        </b></font>
+<p>
+ </p><ul>
+ <li> The <b>format string</b> in a 
+	<font color="blue"><b><tt> print </tt></b></font>
+	or
+	<font color="blue"><b><tt> write </tt></b></font>
+	controls the 
+	<font color="red"><b> manner </b></font>
+	printing the values
+  <p>
+  </p><hr>
+  <p>
+  </p></li><li> The <b>syntax</b> of a
+	<font color="blue"><b> format string </b></font> is:
+<p>
+</p><ul>
+<table border="5" bgcolor="yellow">
+<tbody><tr> <td>
+
+<font color="blue">
+<b>
+<pre><font color="red">
+     '(</font> format-spec, format-spec, ... <font color="red">)'</font>              
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+A <font color="blue"><b> format-spec </b></font>
+ can be:
+</p><p>
+</p><ul>
+<table border="5" bgcolor="lightgreen">
+<tbody><tr> <td>
+ <ul>
+ <li> a <font color="red"><b> format descriptor </b></font> (discussed next)
+ <p>
+ </p></li><li> A <font color="red"><b> format string </b></font>
+	(i.e., the definition is
+	<font color="blue"><b> recursive </b></font>)
+ </li></ul>
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+
+
+
+
+ </p><p>
+ </p><hr>
+ <p>
+ </p></li><li> <b>Format descriptors:</b> (not exhaustive, most commonly used only)
+  <p>
+  </p><ul>
+  <table border="5" bgcolor="lightcyan">
+
+ <tbody><tr>
+ <td width="200"> <font color="red"><b><tt>X</tt></b></font> </td>
+  <td>	one space </td>
+  </tr>
+
+ <tr>
+ <td> <font color="red"><b><tt>/</tt></b></font> </td>
+  <td>	new line</td>
+  </tr>
+ <tr>
+ <td width="200"> <font color="red"><b><tt>A</tt></b></font> </td>
+  <td>	one character (ASCII code) </td>
+  </tr>
+
+  <tr>
+  <td> <font color="red"><b><tt>I#</tt></b></font> </td>
+   <td> integer number, with "#" of digits (overflow is printed as ****) </td>
+  </tr>
+  <tr>
+  <td> <font color="red"><b><tt>F#1.#2</tt></b></font> </td>
+  <td>	<b><i>fixed point </i></b>number notation, with "#1" characters 
+	(i.e., spaces to print)
+	and "#2" digits precision </td>
+  </tr>
+
+  <tr>
+  <td> <font color="red"><b><tt>E#1.#2</tt></b></font> </td>
+  <td>	<b><i>floating point</i></b> number notation, with "#1" characters and 
+	"#2" digits precision
+	<p>
+	<b>NOTE:</b> the number printed will be "-0.xxxxxxE-xx".
+      <br>
+	#2 determines the number od "x". Hence,
+      <br>
+	#1 &gt;= #2 + 7 to allow meaningful output !
+  </p></td>
+  </tr>
+
+  <tr>
+  <td> <font color="red"><b><tt>D#1.#2</tt></b></font> </td>
+  <td>	
+	<b><i>Double precision float</i></b> number notation, 
+	with "#1" characters and
+        "#2" digits precision
+        <p>
+        <b>NOTE:</b> the number printed will be "-0.xxxxxxE-xx".
+      <br>
+        #2 determines the number od "x". Hence,
+      <br>
+        #1 &gt;= #2 + 7 to allow meaningful output !
+
+  </p><p>
+   (I can't see any difference in behavior from <b>E</b>... :-))
+  </p></td></tr>
+
+
+  </tbody></table>
+  </ul>
+
+<p>
+ <b>Examples:</b>
+</p><p>
+</p><ul>
+<table border="5" bgcolor="yellow">
+<tbody><tr> <td>
+
+<font color="blue">
+<b>
+<pre>
+   I5          xxx         (5 digits integers)             
+	     &lt;---&gt;
+	       5 char
+
+   F10.2       xxxxx.xx
+	     &lt;--------&gt;
+	       10 char
+
+   E15.6        0.xxxxxxE+xx
+	          &lt;----&gt;
+		    6 char
+	     &lt;-------------&gt;
+	       15 char
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+ </p><hr>
+ <p>
+ </p></li><li> <font color="#00a000"><b> Example Program: </b></font>
+      (Demo above code)
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      <sub><sub><sub>
+        <img src="read_write_print_files/Example.jpg">
+        </sub></sub></sub>
+   <p>
+   </p><ul>
+   <li> Prog file:
+        <a href="http://www.mathcs.emory.edu/~cheung/Courses/561/Syllabus/6-Fortran/Progs/format01.f90"> click here </a>
+   </li></ul>
+
+
+ <p>
+ </p><hr>
+ <hr>
+ <p>
+ </p></li><li> <b>Preceeding Count</b>:
+  <p>
+  </p><ul>
+  <li> A 
+	<font color="blue"><b> format descriptor </b></font> 
+	can be
+	<font color="red"><b> preceeded </b></font>
+	by a <font color="blue"><b> count </b></font>
+  <p>
+	The <font color="blue"><b> count </b></font>
+	"<font color="red"><b> repeats </b></font>" the
+	given
+	<font color="blue"><b> format descriptor </b></font> 
+	
+  </p><p>
+ </p></li><li> <b><i>Examples:</i></b>
+  <p>
+  </p><ul>
+  <table border="5" bgcolor="lightgreen">
+ <tbody><tr>
+ <td width="100"> <font color="red"><b><tt>4X</tt></b></font> </td>
+  <td>  <b><tt>XXXX</tt></b> </td>
+  </tr>
+  <tr>
+  <td> <font color="red"><b><tt>2I8</tt></b></font> </td>
+   <td width="200"> <b><tt>I8 I8 </tt></b></td>
+  </tr>
+  </tbody></table>
+  <p>
+  </p></ul>
+  </li></ul>
+
+  </li></ul>
+ <p>
+</p><hr>
+<hr>
+<p>
+</p></li><li> <font color="darkmagenta"><b>
+        Repeating the <i>last</i> format  descriptor
+        </b></font>
+ <p>
+ </p><ul>
+ <p>
+ </p><li> The 
+	<font color="red"><b> <i>last</i> format descriptor </b></font>
+	(<b>not</b> <font color="blue"><b> format string </b></font>)
+	is <b>assumed</b> to be
+	<font color="red"><b> repeated ad infinitum </b></font>
+ <p>
+ </p></li><li> This behavior is best 
+	<font color="red"><b> illustrated </b></font>
+	with
+	<font color="blue"><b> x </b></font>
+
+ <p>
+ </p><hr>
+ <p>
+ </p></li><li> <b><i>Example 1:</i></b>
+ <p>
+
+</p><p>
+</p><ul>
+<table border="5" bgcolor="yellow">
+<tbody><tr> <td>
+
+<font color="blue">
+<b>
+<pre>
+  print '<font color="red">(F7.2, 4X, F7.2)</font>', A, B, C, D, E   <font color="red">
+          ^^^^      ^^^^</font>
+
+<hr>
+is processed as:
+
+  print '<font color="red">(F7.2, 4X, F7.2)</font>', A, B
+  print '<font color="red">(F7.2, 4X, F7.2)</font>', C, D
+  print '<font color="red">(F7.2, 4X, F7.2)</font>', E
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+ <p>
+ </p><li> I.e.: <font color="red"><b>(F7.2, 4X, F7.2)</b></font> is 
+	<font color="blue"><b> repeated <i>ad infinitum</i> </b></font>
+	
+</li></ul>
+<p>
+</p><hr>
+ <p>
+ </p></li><li> <b><i>Example 2:</i></b>
+ <p>
+ </p><ul>
+ <table border="5" bgcolor="yellow">
+ <tbody><tr><td>
+ <b><pre>
+  print '(F7.2, 4X, <font color="red">(F7.2)</font>)', A, B, C, D, E   
+</pre>  </b>
+ </td></tr>
+ <tr><td bgcolor="lightgreen">
+ <b>
+is processed as:
+<pre>  print '(F7.2, 4X, F7.2)', A, B
+  print '<font color="red">(F7.2)</font>', C
+  print '<font color="red">(F7.2)</font>', D
+  print '<font color="red">(F7.2)</font>', E
+</pre>  </b>
+ </td></tr>
+ </tbody></table>
+ <p>
+ </p><li> I.e.: <font color="red"><b>(F7.2)</b></font> is 
+	<font color="blue"><b> repeated <i>ad infinitum</i> </b></font>
+ </li></ul>
+ <p>
+ </p><p>
+ </p><hr>
+ <p>
+ </p></li><li> <font color="#00a000"><b> Example Program: </b></font>
+      (Demo above code)
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      <sub><sub><sub>
+        <img src="read_write_print_files/Example.jpg">
+        </sub></sub></sub>
+   <p>
+   </p><ul>
+   <li> Prog file:
+  	<a href="http://www.mathcs.emory.edu/~cheung/Courses/561/Syllabus/6-Fortran/Progs/format02.f90"> click here </a>
+   </li></ul>
+
+ </li></ul>
+ <p>
+</p><hr>
+<hr>
+<p>
+</p></li><li> <font color="darkmagenta"><b>
+        Tricks to print arrays and matrices in F90
+        </b></font>
+ <p>
+ </p><ul>
+ <li> <b>Array elements</b> can be
+	<font color="blue"><b> written </b></font>
+	using an
+	<font color="red"><b> implicit loop statement </b></font>
+	in the
+	<font color="blue"><b><tt> PRINT</tt>  </b></font>
+	or
+	<font color="blue"><b><tt> WRITE </tt>  </b></font>
+	statement
+ <p>
+ <b>Example:</b> <font color="blue"><b> one-dimensional array </b></font>
+ </p><p>
+</p><p>
+</p><ul>
+<table border="5" bgcolor="yellow">
+<tbody><tr> <td>
+
+<font color="red">
+<b>
+<pre>
+  PRINT *, (A(i), i = 1, 3)                
+<font color="blue">
+is equavalent to:
+</font>
+  PRINT *, A(1), A(2), A(3)   
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+
+ </p><p>
+ <b>Example:</b> <font color="blue"><b> two-dimensional array </b></font>
+ </p><p>
+</p><p>
+</p><ul>
+<table border="5" bgcolor="yellow">
+<tbody><tr> <td>
+
+<font color="red">
+<b>
+<pre>
+  PRINT *, (  (A(i,j), i = 1, 3), j = 1, 3  )                
+<font color="blue">
+is equavalent to:
+</font>
+  PRINT *, A(1,1), A(1,2), A(1,3), A(2,1), A(2,2), A(2,3),...      
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+ </p><hr>
+ <p>
+ </p></li><li> <font color="#00a000"><b> Example Program: </b></font>
+      (Demo above code)
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      <sub><sub><sub>
+        <img src="read_write_print_files/Example.jpg">
+        </sub></sub></sub>
+   <p>
+   </p><ul>
+   <li> Prog file:
+        <a href="http://www.mathcs.emory.edu/~cheung/Courses/561/Syllabus/6-Fortran/Progs/x.java"> click here </a>
+   </li></ul>
+ <p>
+ </p><hr>
+ <hr>
+ <p>
+ </p></li><li> A <b>trick</b> to print a 
+	<font color="blue"><b> one-dimensional array  </b></font>
+	into a 
+	<font color="blue"><b> table of 2 columns</b></font>:
+ <p>
+ </p><ul>
+ <table border="5" bgcolor="yellow">
+ <tbody><tr><td>
+ <b><pre>
+  REAL, DIMENSION(10) :: A
+<font color="blue">
+  print '("Table form of A"/<font color="red">(2F8.2)</font>)', (A(i), i = 1, 10)</font>   
+</pre>  </b>
+ </td></tr>
+ <tr><td bgcolor="lightgreen">
+ <b>
+output looks like this:
+<pre><font color="blue">
+  Table form of A
+  A(1)   A(2)
+  A(3)   A(4)
+  A(5)   A(6)
+  A(7)   A(8)
+  A(9)   A(10)</font>
+</pre>  </b>
+ </td></tr>
+ </tbody></table>
+ <p>
+ </p><li> <font color="red"><b>(F8.2, 4X, F8.2)</b></font> is repeated !!!
+ </li></ul>
+ <p>
+ </p><hr>
+ <hr>
+ <p>
+
+ </p></li><li> A <b>trick</b> to print a 
+	<font color="blue"><b> matrix  </b></font>:
+ <p>
+ </p><ul>
+ <table border="5" bgcolor="yellow">
+ <tbody><tr><td>
+ <b><pre>
+  REAL, DIMENSION(10, 10) :: A
+<font color="blue">
+  print '("Matrix A"/<font color="red">(10F8.2)</font>)', ((A(i,j), i = 1, 10), j = 1, 10) </font>   
+</pre>  </b>
+ </td></tr>
+ <tr><td bgcolor="lightgreen">
+ <b>
+output looks like this:
+<pre><font color="blue">
+  Matrix A
+  A(1,1)   A(1,2)  A(1,3)  A(1,4)  A(1,5) ...
+  A(2,1)   A(2,2)  ...
+  A(3,1)   A(3,2)  ...
+  A(4,1)   A(4,2)  ...
+  ....
+  A(10,1)  A(10,2)  ...</font>
+</pre>  </b>
+ </td></tr>
+ </tbody></table>
+ </ul>
+ <p>
+ </p><hr>
+ <p>
+ </p></li><li> <font color="#00a000"><b> Example Program: </b></font>
+      (Demo above code)
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      <sub><sub><sub>
+        <img src="read_write_print_files/Example.jpg">
+        </sub></sub></sub>
+   <p>
+   </p><ul>
+   <li> Prog file:
+  	<a href="http://www.mathcs.emory.edu/~cheung/Courses/561/Syllabus/6-Fortran/Progs/format04.f90"> click here </a>
+   </li></ul>
+ </li></ul>
+<p>
+</p><hr>
+<hr>
+ <p>
+</p></li><li> <font color="darkmagenta"><b>
+     No <tt>NEWLINE</tt></b><tt>
+        </tt></font><tt>
+<p>
+ </p><ul>
+ <li> The <font color="blue"><b><tt>PRINT</tt>  </b></font>
+	will <b>always</b> print a
+	<font color="red"><b> newline </b></font>
+ <p>
+
+
+ </p></li><li> To <font color="red"><b> prevent </b></font>
+	a
+	<font color="blue"><b> <tt>WRITE</tt>  </b></font>
+	statement from
+	<font color="red"><b> advancing to the next lne </b></font>,
+	add
+	<font color="blue"><b> ADVANCE="NO" </b></font>
+	as the <b>third option</b> in the
+	<font color="red"><b> format string </b></font>
+ <p>
+ </p><hr>
+ <p>
+ </p></li><li> <b>Example:</b> printing a matrix
+<p>
+</p><ul>
+<table border="5" bgcolor="lightcyan">
+<tbody><tr> <td>
+
+<font color="blue">
+<b>
+<pre>
+   print *, "Matrix B"
+   DO i = 1, N
+      DO j = 1, N<font color="red">
+         write (6, "(F8.2)", ADVANCE="NO") B(i, j)</font>           
+      END DO
+      print *
+   END DO
+
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+ </li></ul>
+<p>
+</p><hr>
+<hr>
+ <p>
+</p></tt></li><li><tt> <font color="darkmagenta"><b>
+        Reading data from the terminal
+        </b></font>
+ <p>
+ </p><ul>
+ <li> The <font color="blue"><b> input statement </b></font>
+	to <font color="red"><b> read data from the terminal </b></font>
+	in <b>F90</b> are:
+ <p>
+</p><p>
+</p><ul>
+<table border="5" bgcolor="yellow">
+<tbody><tr> <td>
+
+<font color="blue">
+<b>
+<pre>
+  READ <font color="red">Format-String</font> , Variables
+
+  READ <font color="red">(5 , Format-String)</font>  Variables     
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+ <p>
+ The <font color="blue"><b> terminal input </b></font>
+  is <font color="red"><b> device 5 </b></font>
+</p><p>
+ </p></li><li> The form 
+	<font color="red"><b><tt>READ (5 , Format-String) ...</tt></b></font>
+   is more flexible, because you can specify a 
+	<font color="blue"><b> specific device number </b></font>
+ <p>
+ </p><hr>
+ <p>
+ </p></li><li> <font color="red"><b> Important note: </b></font>
+<p>
+</p><ul>
+<table border="5" bgcolor="lightcyan">
+<tbody><tr> <td>
+ <ul>
+ <li> <font color="blue"><b> Be aware </b></font>
+	that <b>Fortran</b> is
+	<font color="red"><b> record oriented </b></font>
+	(punch cards !)
+  <p>
+  </p></li><li> The <font color="blue"><b> format string </b></font>
+	is used to <b>denote</b>
+	<font color="red"><b> the <i>size</i> of a record field</b></font>
+ </li></ul>
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+ </p><p>
+ </p><hr>
+ <p>
+ </p></li><li> <b>Example:</b>
+<p>
+</p><ul>
+<table border="5" bgcolor="lightgreen">
+<tbody><tr> <td>
+
+<font color="blue">
+<b>
+<pre>
+   INTEGER  A
+
+   READ (5, <font color="red">"(I3)"</font> )    A     <font color="red">! reads a 3 digit integer      </font>
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+ <p>
+ </p><hr>
+ <p>
+ </p></li><li> <font color="#00a000"><b> Example Program: </b></font>
+      (Demo above code)
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      <sub><sub><sub>
+        <img src="read_write_print_files/Example.jpg">
+        </sub></sub></sub>
+   <p>
+   </p><ul>
+   <li> Prog file:
+        <a href="http://www.mathcs.emory.edu/~cheung/Courses/561/Syllabus/6-Fortran/Progs/format06.f90"> click here </a>
+   </li></ul>
+
+<p>
+ </p><hr>
+ <hr>
+ <p>
+ </p></li><li> <font color="red"><b> Recommendation </b></font>:
+	always use the
+	<font color="blue"><b> <i>default</i> format string </b></font>
+	in a
+	<font color="red"><b> READ </b></font>
+	statement:
+
+<p>
+</p><ul>
+<table width="500" border="5" bgcolor="yellow">
+<tbody><tr> <td>
+ <ul>
+ <li> Use
+  <font color="red"><b><tt> 
+	READ <font color="red">(dev# , *)</font>  Variables 
+	</tt></b></font>
+
+ </li></ul>
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+<b>Example:</b>
+</p><p>
+</p><ul>
+<table border="5" bgcolor="lightgreen">
+<tbody><tr> <td>
+
+<font color="blue">
+<b>
+<pre>
+  INTEGER A
+
+  READ <font color="red">(5 , *)</font>  A              
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+ <p>
+  </p></li></ul>
+ <p>
+</p><hr>
+<hr>
+ <p>
+</p></tt></li><li><tt> <font color="darkmagenta"><b>
+        File I/O
+        </b></font>
+<p>
+ </p><ul>
+ <li> A <b>file</b> is 
+	<font color="blue"><b> opened </b></font>
+	for 
+	<font color="red"><b> input </b></font>
+	and
+	<font color="red"><b> output </b></font>
+	using the
+	<font color="blue"><b> <tt>OPEN</tt> </b></font>
+	statement
+ <p>
+
+
+ </p></li><li> <b><i>Syntax of the OPEN statement:</i></b>
+ <p>
+
+</p><p>
+</p><ul>
+<table border="5" bgcolor="yellow">
+<tbody><tr> <td>
+
+<font color="blue">
+<b>
+<pre>
+  OPEN( <font color="red">DeviceNumber</font>, <font color="red">FILE=</font>'InputFileName' )       
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+</p><hr>
+ <p>
+ </p></li><li> <b> Example:</b>
+<p>
+</p><ul>
+<table border="5" bgcolor="lightcyan">
+<tbody><tr> <td>
+
+<font color="red">
+<b>
+<pre>
+  OPEN( 10, FILE='myFile' )                 
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+</p><hr>
+<hr>
+<p>
+ </p></li><li> <b>Reading from the file:</b>
+<p>
+</p><ul>
+<table border="5" bgcolor="lightgreen">
+<tbody><tr> <td>
+
+<font color="blue">
+<b>
+<pre>
+  READ ( <font color="red">10</font>, Format-String )   Variables                
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+</p><hr>
+<hr>
+<p>
+ </p></li><li> <b>Writing to the file:</b>
+<p>
+</p><ul>
+<table border="5" bgcolor="lightgreen">
+<tbody><tr> <td>
+
+<font color="blue">
+<b>
+<pre>
+  WRITE ( <font color="red">10</font>, Format-String , [advance="NO"])   Variables          
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+</p><p>
+</p><hr>
+<hr>
+<p>
+</p></li><li> <font color="red"><b> Warning: </b></font>
+<p>
+</p><ul>
+<table border="5" bgcolor="yellow">
+<tbody><tr> <td>
+ <ul>
+ <li> Do not attempt to
+	<font color="red"><b> read </b></font>
+	and
+	<font color="red"><b> write</b></font>
+	to a file
+	<font color="blue"><b> at the same time </b></font>
+ <p>
+ </p></li><li> A <b>write</b> operation will 
+	<font color="red"><b> append to the file</b></font>
+	and
+	<font color="blue"><b> more the file access pointer </b></font>
+	to the
+	<font color="red"><b> end of the file </b></font>
+ <p>
+ </p></li><li> A <b>subsequent</b>
+	<font color="red"><b> read operation </b></font>
+	will
+	<font color="blue"><b> fail </b></font>...
+ </li></ul>
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+ </p><p>
+ </p><hr>
+ <p>
+ </p></li><li> <font color="#00a000"><b> Example Program: </b></font>
+      (Demo above code)
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      <sub><sub><sub>
+        <img src="read_write_print_files/Example.jpg">
+        </sub></sub></sub>
+   <p>
+   </p><ul>
+   <li> Prog file:
+        <a href="http://www.mathcs.emory.edu/~cheung/Courses/561/Syllabus/6-Fortran/Progs/file-io.f90"> click here </a>
+   </li><li> Sample input:
+        <a href="http://www.mathcs.emory.edu/~cheung/Courses/561/Syllabus/6-Fortran/Progs/inputFile"> click here </a>
+   </li></ul>
+</li></ul>
+
+<p>
+</p><hr><hr>
+<p>
+</p></tt></li><li><tt> <font color="darkmagenta"><b>
+        Reading a Matrix from a file
+        </b></font>
+<p>
+ </p><ul>
+ <li> <b>Example:</b>
+<p>
+</p><ul>
+<table border="5" bgcolor="lightcyan">
+<tbody><tr> <td>
+
+<font color="blue">
+<b>
+<pre>
+  PROGRAM main
+   IMPLICIT NONE
+
+   REAL, DIMENSION(4,4) :: B
+   INTEGER i, j
+
+   OPEN ( 10, FILE="inputMatrix" )
+<font color="red"> 
+   READ (10, *)  ((B(i, j), i = 1, 4), j = 1, 4)</font>               
+  END
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+<p>
+ </p><p>
+ </p><hr>
+ <p>
+ </p></li><li> <font color="#00a000"><b> Example Program: </b></font>
+      (Demo above code)
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      <sub><sub><sub>
+        <img src="read_write_print_files/Example.jpg">
+        </sub></sub></sub>
+   <p>
+   </p><ul>
+   <li> Prog file:
+        <a href="http://www.mathcs.emory.edu/~cheung/Courses/561/Syllabus/6-Fortran/Progs/read01.f90"> click here </a>
+   </li><li> Input matrix file:
+        <a href="http://www.mathcs.emory.edu/~cheung/Courses/561/Syllabus/6-Fortran/Progs/inputMatrix"> click here </a>
+   </li></ul>
+
+
+</li></ul>
+
+<p>
+
+</p><hr>
+<p>
+</p></tt></li><li><tt> <font color="darkmagenta"><b>
+        Closing a file
+        </b></font>
+ <p>
+ </p><ul>
+ <li> After you 
+	<font color="red"><b> finish writing a file </b></font>, 
+	you must <font color="blue"><b><i>close</i></b></font>
+	the file to avoid possible data loss due to system loss of your data
+ <p>
+</p><p>
+</p><ul>
+<table border="5" bgcolor="yellow">
+<tbody><tr> <td>
+
+<font color="red">
+<b>
+<pre>
+  CLOSE(deviceNumber)                  
+</pre>
+</b>
+</font>
+
+</td> </tr>
+</tbody></table>
+</ul>
+</li></ul>
+<p>
+</p><hr>
+<hr>
+<p>
+</p></tt></li><li><tt> <font color="darkmagenta"><b>
+        Random file access in Fortran ?
+        </b></font>
+ <p>
+ </p><ul>
+ <li> Fortran does not seem to be able to access files randomly
+ <p>
+ </p></li><li> The only feature that I can find is it can <b><i>rewind</i></b>
+	an opened file to the beginning - and the file can be read again
+	from the start...
+ </li></ul>
+ <p>
+</p><hr>
+<p>
+</p></tt></li><li><tt> <font color="darkmagenta"><b>
+        System calls in Fortran ?
+        </b></font>
+ <p>
+ </p><ul>
+ <li> There is no uniform support for UNIX system calls in Fortran
+ <p>
+ </p></li><li> Some UNIX operating systems may provide system calls,
+	others do not.
+ <p>
+     Check with manufacturer....
+ </p></li></ul>
+ </tt></li></ul><tt>
+<p>
+</p><hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+ 
+</tt></body></html>

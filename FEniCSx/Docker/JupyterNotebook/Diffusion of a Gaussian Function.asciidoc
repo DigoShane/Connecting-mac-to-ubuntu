@@ -1,0 +1,230 @@
++*In[1]:*+
+[source, ipython3]
+----
+import matplotlib.pyplot as plt
+import pyvista
+import ufl
+import numpy as np
+
+from petsc4py import PETSc
+from mpi4py import MPI
+
+from dolfinx import fem, mesh, io, plot
+from dolfinx.fem.petsc import assemble_vector, assemble_matrix, create_vector, apply_lifting, set_bc
+
+# Define temporal parameters
+t = 0  # Start time
+T = 1.0  # Final time
+num_steps = 50
+dt = T / num_steps  # time step size
+
+# Define mesh
+nx, ny = 50, 50
+domain = mesh.create_rectangle(MPI.COMM_WORLD, [np.array([-2, -2]), np.array([2, 2])],
+                               [nx, ny], mesh.CellType.triangle)
+V = fem.FunctionSpace(domain, ("Lagrange", 1))
+----
+
+
++*In[2]:*+
+[source, ipython3]
+----
+# Create initial condition
+def initial_condition(x, a=5):
+    return np.exp(-a * (x[0]**2 + x[1]**2))
+
+
+u_n = fem.Function(V)
+u_n.name = "u_n"
+u_n.interpolate(initial_condition)
+
+# Create boundary condition
+fdim = domain.topology.dim - 1
+boundary_facets = mesh.locate_entities_boundary(
+    domain, fdim, lambda x: np.full(x.shape[1], True, dtype=bool))
+bc = fem.dirichletbc(PETSc.ScalarType(0), fem.locate_dofs_topological(V, fdim, boundary_facets), V)
+----
+
+
++*In[3]:*+
+[source, ipython3]
+----
+xdmf = io.XDMFFile(domain.comm, "diffusion.xdmf", "w")
+xdmf.write_mesh(domain)
+
+# Define solution variable, and interpolate initial solution for visualization in Paraview
+uh = fem.Function(V)
+uh.name = "uh"
+uh.interpolate(initial_condition)
+xdmf.write_function(uh, t)
+----
+
+
++*In[4]:*+
+[source, ipython3]
+----
+u, v = ufl.TrialFunction(V), ufl.TestFunction(V)
+f = fem.Constant(domain, PETSc.ScalarType(0))
+a = u * v * ufl.dx + dt * ufl.dot(ufl.grad(u), ufl.grad(v)) * ufl.dx
+L = (u_n + dt * f) * v * ufl.dx
+----
+
+
++*In[5]:*+
+[source, ipython3]
+----
+bilinear_form = fem.form(a)
+linear_form = fem.form(L)
+----
+
+
++*In[6]:*+
+[source, ipython3]
+----
+A = assemble_matrix(bilinear_form, bcs=[bc])
+A.assemble()
+b = create_vector(linear_form)
+----
+
+
++*In[7]:*+
+[source, ipython3]
+----
+solver = PETSc.KSP().create(domain.comm)
+solver.setOperators(A)
+solver.setType(PETSc.KSP.Type.PREONLY)
+solver.getPC().setType(PETSc.PC.Type.LU)
+----
+
+
++*In[8]:*+
+[source, ipython3]
+----
+import matplotlib as mpl
+pyvista.start_xvfb()
+
+grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V))
+
+plotter = pyvista.Plotter()
+plotter.open_gif("u_time.gif", fps=10)
+
+grid.point_data["uh"] = uh.x.array
+warped = grid.warp_by_scalar("uh", factor=1)
+
+viridis = mpl.colormaps.get_cmap("viridis").resampled(25)
+sargs = dict(title_font_size=25, label_font_size=20, fmt="%.2e", color="black",
+             position_x=0.1, position_y=0.8, width=0.8, height=0.1)
+
+renderer = plotter.add_mesh(warped, show_edges=True, lighting=False,
+                            cmap=viridis, scalar_bar_args=sargs,
+                            clim=[0, max(uh.x.array)])
+----
+
+
++*Out[8]:*+
+----
+
+    ---------------------------------------------------------------------------
+
+    ModuleNotFoundError                       Traceback (most recent call last)
+
+    Cell In[8], line 7
+          4 grid = pyvista.UnstructuredGrid(*plot.vtk_mesh(V))
+          6 plotter = pyvista.Plotter()
+    ----> 7 plotter.open_gif("u_time.gif", fps=10)
+          9 grid.point_data["uh"] = uh.x.array
+         10 warped = grid.warp_by_scalar("uh", factor=1)
+
+
+    File /usr/local/lib/python3.10/dist-packages/pyvista/plotting/plotter.py:4974, in BasePlotter.open_gif(self, filename, loop, fps, palettesize, subrectangles, **kwargs)
+       4972     from imageio import __version__, get_writer
+       4973 except ModuleNotFoundError:  # pragma: no cover
+    -> 4974     raise ModuleNotFoundError(
+       4975         'Install imageio to use `open_gif` with:\n\n   pip install imageio'
+       4976     ) from None
+       4978 if filename[-3:] != 'gif':
+       4979     raise ValueError('Unsupported filetype.  Must end in .gif')
+
+
+    ModuleNotFoundError: Install imageio to use `open_gif` with:
+    
+       pip install imageio
+
+----
+
+
++*In[9]:*+
+[source, ipython3]
+----
+for i in range(num_steps):
+    t += dt
+
+    # Update the right hand side reusing the initial vector
+    with b.localForm() as loc_b:
+        loc_b.set(0)
+    assemble_vector(b, linear_form)
+
+    # Apply Dirichlet boundary condition to the vector
+    apply_lifting(b, [bilinear_form], [[bc]])
+    b.ghostUpdate(addv=PETSc.InsertMode.ADD_VALUES, mode=PETSc.ScatterMode.REVERSE)
+    set_bc(b, [bc])
+
+    # Solve linear problem
+    solver.solve(b, uh.vector)
+    uh.x.scatter_forward()
+
+    # Update solution at previous time step (u_n)
+    u_n.x.array[:] = uh.x.array
+
+    # Write solution to file
+    xdmf.write_function(uh, t)
+    # Update plot
+    warped = grid.warp_by_scalar("uh", factor=1)
+    plotter.update_coordinates(warped.points.copy(), render=False)
+    plotter.update_scalars(uh.x.array, render=False)
+    plotter.write_frame()
+plotter.close()
+xdmf.close()
+----
+
+
++*Out[9]:*+
+----
+
+    ---------------------------------------------------------------------------
+
+    KeyError                                  Traceback (most recent call last)
+
+    Cell In[9], line 24
+         22 xdmf.write_function(uh, t)
+         23 # Update plot
+    ---> 24 warped = grid.warp_by_scalar("uh", factor=1)
+         25 plotter.update_coordinates(warped.points.copy(), render=False)
+         26 plotter.update_scalars(uh.x.array, render=False)
+
+
+    File /usr/local/lib/python3.10/dist-packages/pyvista/core/filters/data_set.py:2581, in DataSetFilters.warp_by_scalar(self, scalars, factor, normal, inplace, progress_bar, **kwargs)
+       2579     set_default_active_scalars(self)
+       2580     field, scalars = self.active_scalars_info
+    -> 2581 _ = get_array(self, scalars, preference='point', err=True)
+       2583 field = get_array_association(self, scalars, preference='point')
+       2584 if field != FieldAssociation.POINT:
+
+
+    File /usr/local/lib/python3.10/dist-packages/pyvista/core/utilities/arrays.py:293, in get_array(mesh, name, preference, err)
+        291     return farr
+        292 elif err:
+    --> 293     raise KeyError(f'Data array ({name}) not present in this dataset.')
+        294 return None
+
+
+    KeyError: 'Data array (uh) not present in this dataset.'
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
