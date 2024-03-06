@@ -65,10 +65,6 @@ u_out.vector[:] = u.vector.array
 print("a8")
 
 
-print("yoyo")
-
-print("yoyo^2")
-
 try:
     import pyvista
     cells, types, x = plot.vtk_mesh(V)
