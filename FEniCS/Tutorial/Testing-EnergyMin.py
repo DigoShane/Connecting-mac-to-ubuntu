@@ -10,6 +10,7 @@
 #5. Properly modify theta such that it is bounded within [-\pi,\pi].
 #======================================================================================================
 #ISSUES WITH THE CODE:-
+#Ubuntu version. The mac version is more up-to-date.
 
 import time # timing for performance test.
 t0 = time.time()
