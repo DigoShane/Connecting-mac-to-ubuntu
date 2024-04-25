@@ -19,16 +19,16 @@ from ufl import ds, dx, grad, inner
 import numpy as np
 
 
-
 L=10
 mesh = mesh.create_interval(comm=MPI.COMM_WORLD, points=(0,L), nx=100)
+x = ufl.SpatialCoordinate(mesh)
 V = FunctionSpace(mesh, ("CG", 1))
-gamma = float(0.1) #learning rate
+gamma = float(0.001) # learning rate
+NN = int(input("Enter number of iterations: "))
 
 # Initialization
 u = Function(V)
-#u = ufl.Coefficient(V)
-Pi = (1-u)**2*dx
+Pi = gamma*((1-u)**2+ inner(grad(u), grad(u)) )*dx # cheat way to make sure we get \gamma F =\Delta u
 
 F = ufl.derivative(Pi, u)   # ufl form of the derivative
 
@@ -36,10 +36,13 @@ F_form = dolfinx.fem.form(F)   # Convert the ufl form to the FEniCSx weak form
 
 F_vec = create_vector(F_form)   # Initialize a PETSc vector that is compatible with a linear form
 
+#Initialize initial conditions
+u0 = fem.Function(V)
+u0.interpolate( fem.Expression( x[0]/L, V.element.interpolation_points() ) ) #initial conditions
+u = u0 
+
 #In the while/for loops:
-#while u.vector.norm() > 1e-6: 
-for i in range(10):
- i = i+1
+for i in range(NN):
  with F_vec.localForm() as loc:
      loc.set(0)   # Zero out the vector components. We want to use assemble_vector to initialize it below.
  
@@ -50,19 +53,9 @@ for i in range(10):
  with u.vector.localForm() as loc:
    for i in range(0,u_update.size):
      loc.setValue(i,u_update[i])
- #u.vector[:] = u_update
- #u.vector.axpy(1, u_update)
- #u.vector.set_local(u_update)
-
- #for i in range(0,u_update.size):
- # u.vector.setValue(i, u_update[i])
-
-print("b4")
-
+ 
 u_out = Function(V)
 u_out.vector[:] = u.vector.array
-
-print("a8")
 
 
 try:
